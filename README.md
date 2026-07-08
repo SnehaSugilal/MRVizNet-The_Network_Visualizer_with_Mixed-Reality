@@ -1,4 +1,4 @@
-<img width="943" height="470" alt="image" src="https://github.com/user-attachments/assets/0a650cd3-93d8-45da-b578-dd8fb54a3fed" /># MRVizNet-The_Network_Visualizer_with_Mixed-Reality
+# MRVizNet-The_Network_Visualizer_with_Mixed-Reality
 MRVizNet is an immersive, low-latency spatial network monitoring framework designed to map real-time protocol-level traffic onto a 3D physical topology. By decoupling high-speed backend data collection from a rendering frontend, the system eliminates the cognitive friction of reading static 2D log tables (e.g., legacy Wireshark) and replaces them with an interactive 3D/Mixed Reality data plane.
 
 The architecture is explicitly engineered for remote service validation, allowing an engineer to execute standalone telemetry analysis via an XR headset (such as Apple Vision Pro or Meta Quest) connected to remote infrastructure testbeds across different geographic regions. 
