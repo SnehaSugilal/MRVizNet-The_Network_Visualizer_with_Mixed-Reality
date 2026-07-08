@@ -1,9 +1,9 @@
-# MRVizNet: The Immersive Visualizing Network with Mixed Reality
+# MRVizNet: A Mixed Reality based Network Visualizer
 
-MRVizNet is a project built to visualize live network traffic in a 3D environment rather than relying entirely on static, text-based 2D logs like Wireshark. 
+MRVizNet is a project developed in Unity designed to visualize live network traffic in a 3D environment rather than relying entirely on static, text-based 2D logs like Wireshark. The intent is to bridge the gap between raw data extraction and spatial network monitoring.
 It captures packets on a local network, parses their headers, and uses a 3D gaming engine to display packet streams moving dynamically between a source device and target wireless access points.
 
-The system is split into two parts: a Python backend that handles packet sniffing and data routing, and a Unity frontend that renders the 3D topology and handles user interactions.
+The project uses a Python-based packet sniffer as the backend, a local MQTT broker as the data pipeline, and a Unity-built frontend scene acting as the visual control plane.
 
 ---
 
