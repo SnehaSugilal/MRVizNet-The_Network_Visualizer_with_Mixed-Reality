@@ -31,7 +31,7 @@ The project passes packet metadata from the live wire to the 3D scene using a li
 ### 1. Data Capture Engine (Python)
 * **Sniffing:** Uses `Scapy` to tap into the local wireless interface and capture live packet headers.
 * **Filtering:** Filters out background traffic to isolate specific target protocols (TCP, UDP, HTTP, and FTP) so the frontend isn't flooded with junk data.
-* **Serialization:** Extracts essential fields—Source IP, Destination IP, Protocol Type, and Packet Size—and packages them into plain JSON strings.
+* **Serialization:** Extracts essential fields: Source IP, Destination IP, Protocol Type, and Packet Size—and packages them into plain JSON strings.
 
 ### 2. Messaging Pipeline (MQTT)
 * **Broker:** Uses a local **Mosquitto MQTT Broker** to handle communication between Python and Unity.
