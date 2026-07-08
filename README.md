@@ -7,7 +7,7 @@ The system is split into two parts: a Python backend that handles packet sniffin
 
 ---
 
-## 🛠 Architectural Overview & Data Flow
+## Architectural Overview & Data Flow
 
 The project passes packet metadata from the live wire to the 3D scene using a lightweight publish-subscribe model over MQTT.
 
@@ -43,3 +43,70 @@ The project passes packet metadata from the live wire to the 3D scene using a li
 * **Thread Management:** Because MQTT messages arrive on background threads, `UnityMainThreadDispatcher.cs` safely queues the incoming data so it can be handled by Unity's main rendering loop.
 * **Rendering:** `PacketVisualizer.cs` instantiates 3D prefabs at the laptop source position and animates them along a `LineRenderer` path toward cylinders representing the Access Points (AP1, AP2, AP3).
 * **Visual Coding:** Packets are color-coded by protocol (**Red** = TCP, **Blue** = UDP, **Green** = HTTP, **Yellow** = FTP) and visually scaled based on their actual packet size.
+
+## Project Requirements
+
+### Software & Libraries
+* **Python Backend:** `paho-mqtt`, `scapy` (install via `pip install paho-mqtt scapy`)
+* **MQTT Broker:** Eclipse Mosquitto (running locally on default port 1883)
+* **Unity 6 Packages:** * `M2Mqtt` (MQTT client for Unity)
+  * `Newtonsoft.Json` (JSON parsing)
+  * `TextMeshPro` (UI rendering)
+
+### Environment Assets
+* **Source Node:** 3D model representing the local host laptop.
+* **Destination Nodes:** Three distinct 3D cylinders representing target Wireless Access Points (`AP1`, `AP2`, `AP3`).
+* **Packet Prefab:** A basic geometric primitive equipped with a `BoxCollider` (for selection tracking) and a `LineRenderer` (to trace the motion vector).
+
+---
+
+## Step-by-Step Implementation & Workflow
+
+### 1. Hardware & Environment Setup
+1. Deploy the local **Mosquitto MQTT Broker** on the host engine.
+2. Structure the Unity scene layout by establishing the base coordinates for the Laptop transform and positioning the three target Access Point cylinders.
+3. Attach the `MQTTReceiver.cs` script to an empty `NetworkManager` GameObject to handle initialization sockets.
+
+### 2. Execution & Execution Testing
+1. Spin up the packet ingestion pipeline by running the target python script from the terminal:`python wifi_packet_capture.py`
+(Note: mqttsender.py can alternatively be executed to stream predictable mock data profiles for offline logic validation).
+2. Initialize the Unity runtime environment.
+3. Observe the `PacketVisualizer.cs` spawning instances of the packet prefab at the Laptop coordinate path, updating materials based on the incoming JSON protocol flags, and moving them linearly toward the designated target AP.
+4. Interact with any flying packet asset by hovering or left-clicking; the `Raycasting.cs` engine catches the collider collision and forces `UIManager.cs` to print the underlying text data arrays to the on-screen Canvas panel.
+
+---
+
+## Repository Project Hierarchy
+```
+MRVizNet-Project/
+│
+├── Backend/
+│   ├── wifi_packet_capture.py     # Live Scapy packet sniffer & publisher
+│   └── mqttsender.py              # Mock telemetry simulation data script
+│
+└── Frontend/
+    ├── Scenes/
+    │   └── MainScene.unity        # Main topology environment setup
+    │
+    ├── Scripts/
+    │   ├── MQTTReceiver.cs        # Threaded broker connection listener
+    │   ├── UnityMainThreadDispatcher.cs # Thread-safe queue manager
+    │   ├── PacketVisualizer.cs    # Spawning, scaling, and path animation
+    │   ├── PacketInfo.cs          # Local packet telemetry storage class
+    │   ├── Raycasting.cs          # Raycast collision object selector
+    │   └── UIManager.cs           # Canvas TextMeshPro layout controller
+    │
+    └── Materials/
+        ├── TCP_Red.mat
+        ├── UDP_Blue.mat
+        ├── HTTP_Green.mat
+        └── FTP_Yellow.mat
+```
+
+---
+
+## Future Development Scope
+
+* **Headset Porting:** Porting the runtime layout over to standalone VR headsets (e.g., Meta Quest 3 or Apple Vision Pro) via the Unity XR Interaction Toolkit to view the topology within a true spatial context.
+* **Advanced Telemetry Metrics:** Extending the Python parsing dictionary to calculate throughput rates and link drop counts per Access Point destination.
+* **Expanded Protocol Support:** Adding packet identification filters for structural core protocols like ICMP, DNS, and ARP.
