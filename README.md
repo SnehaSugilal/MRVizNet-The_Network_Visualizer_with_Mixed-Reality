@@ -11,11 +11,16 @@ The project uses a Python-based packet sniffer as the backend, a local MQTT brok
 
 The project passes packet metadata from the live wire to the 3D scene using a lightweight publish-subscribe model over MQTT.
 
+To visualize the Pub/Sub architecture better, think of it as a **Digital Post Office** system:
+* **The Mail Sender (`wifi_packet_capture.py` / `mqttsender.py`):** The Python backend. It captures or simulates packet frames, writes down their metadata, and drops them off at the central post office.
+* **The Post Office / Middleman (Mosquitto Broker):** The local MQTT Broker. It sits in the middle, keeping the specific channel (`network/packets`) open and routing incoming data safely.
+* **The Recipient (Unity Engine):** The C# frontend. It continuously watches the channel, pulls down the packet data, and instantly draws it as a moving 3D object.
+
 ```
 [ BACKEND: Local Wi-Fi Traffic ]
                 │ 
                 ▼ (Packet Sniffing via Scapy)
-     [ wifi_packet_capture.py ]
+     [ Wifi Packet Captures ]
                 │
                 ▼ (JSON Payloads over TCP)
      [ Mosquitto MQTT Broker ]  (Running Locally)
@@ -81,12 +86,12 @@ The project passes packet metadata from the live wire to the 3D scene using a li
 MRVizNet-Project/
 │
 ├── Backend/
-│   ├── wifi_packet_capture.py     # Live Scapy packet sniffer & publisher
-│   └── mqttsender.py              # Mock telemetry simulation data script
+│   ├── mr_wifi_packet_capture.py     # Live Scapy packet sniffer & publisher
+│   └── mr_mqttsender.py              # Mock telemetry simulation data script
 │
 └── Frontend/
     ├── Scenes/
-    │   └── MainScene.unity        # Main topology environment setup
+    │   └── MainSceneMR.unity        # Main topology environment setup
     │
     ├── Scripts/
     │   ├── MQTTReceiver.cs        # Threaded broker connection listener
